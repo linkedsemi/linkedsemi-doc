@@ -16,11 +16,3 @@ Welcome to Linkedsemi Documentation Center
    src/manufacture_and_test
    src/solution
    src/video
-   
-
-
-
-Indices and tables
-==================
-
-* :ref:`search`

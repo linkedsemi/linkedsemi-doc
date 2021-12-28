@@ -8,6 +8,5 @@ sdk/wireless
 sdk/module
 sdk/demo
 sdk/notice_le5010
-sdk/release_note
 ```
 
