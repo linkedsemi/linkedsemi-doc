@@ -1,1 +1,5 @@
 # Demos
+
+```{toctree}
+demo/ble
+```
