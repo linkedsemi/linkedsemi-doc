@@ -1,0 +1,7 @@
+stages:
+  - build
+
+doc_build:
+  stage: build
+  script:
+    - sphinx-build -M html ./ _build/ -W

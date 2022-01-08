@@ -1,2 +1,0 @@
-# LinkedSemi-DOC
-
