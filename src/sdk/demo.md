@@ -2,4 +2,5 @@
 
 ```{toctree}
 demo/ble
+demo/peripheral
 ```
