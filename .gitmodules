@@ -1,0 +1,3 @@
+[submodule "ls_sdk"]
+	path = ls_sdk
+	url = https://github.com/linkedsemi/LS_SDK.git
