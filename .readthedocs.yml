@@ -23,4 +23,6 @@ python:
     - requirements: requirements.txt
 
 submodules:
+  include:
+    - ls_sdk
   recursive: false
