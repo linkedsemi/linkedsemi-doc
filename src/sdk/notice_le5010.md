@@ -34,4 +34,20 @@
 用户在使用DMA时需要注意：使用DMA的外设，当启动DMA传输的同时，禁止CPU访问该外设所在的总线上其他外设，否则，当前DMA数据传输有一定概率出错。  
 例如：  
 当SSI模块使用DMA从RAM传输数据到发送寄存器时，由于SSI模块所在的总线是APB2，所以，此时应用软件应避免CPU去访问APB2总线上其他外设，比如ADC、UART1等。  
-![](pics/5010_note_DMA.jpg)      
+![](pics/5010_note_DMA.jpg)   
+
+## 五、适配1M Flash
+用户在使用1M Flash 的5010芯片的时候，需要修改TinyFS数据存储区的基地址。
+
+### Keil 环境
+- 用记事本或者其它文本编辑软件打开SDK目录下的tools\le5010x\after_build.bat文件；
+
+- 找到after_build.bat文件中0x1807c000的数据，然后修改为0x180fc000重新编译即可。
+![](pics/1MFlash_keil.png)
+
+### VS Code环境
+
+- 用记事本或者其它文本编辑软件打开SDK目录下的tools\le5010x\info_sbl_merge.py文件；
+
+- 找到info_sbl_merge.py文件中0x1807C000的数据，然后修改为0x180FC000重新编译即可。
+![](pics/1MFlash_vscode.png)
