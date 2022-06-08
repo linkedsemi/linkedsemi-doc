@@ -4,4 +4,6 @@ stages:
 doc_build:
   stage: build
   script:
+    - git submodule set-url ls_sdk http://10.10.20.8:8000/sw/ls_sdk.git
+    - git submodule update --init
     - sphinx-build -M html ./ _build/ -W
