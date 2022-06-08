@@ -16,8 +16,9 @@ import subprocess, os
 
 read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
-subprocess.call('mkdir _build',shell=True)
-#subprocess.call('doxygen', shell=True)
+subprocess.run('mkdir _build',shell=True)
+subprocess.run('mkdir _build',shell=True,cwd='ls_sdk')
+subprocess.run('doxygen tools/Doxyfile',cwd='ls_sdk')
    
 
 # -- Project information -----------------------------------------------------
@@ -40,7 +41,7 @@ extensions = [
 ]
 
 breathe_projects = {
-    "ls_sdk": "_build/doxyxml"
+    "ls_sdk": "ls_sdk/_build/doxyxml"
 }
 breathe_default_project = "ls_sdk"
 
@@ -63,7 +64,7 @@ language = 'zh_CN'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ['ls_sdk/*']
 
 
 # -- Options for HTML output -------------------------------------------------
