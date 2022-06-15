@@ -18,7 +18,7 @@ read_the_docs_build = os.environ.get('READTHEDOCS', None) == 'True'
 
 subprocess.run('mkdir _build',shell=True)
 subprocess.run('mkdir _build',shell=True,cwd='ls_sdk')
-subprocess.run('doxygen tools/Doxyfile',cwd='ls_sdk')
+subprocess.run('doxygen tools/Doxyfile',cwd='ls_sdk',shell=True)
    
 
 # -- Project information -----------------------------------------------------
