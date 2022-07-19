@@ -325,7 +325,7 @@ Pass示例
 
 图1.2-25
 
-![](./Picture/34.png)
+![](./Picture/34.jpeg)
 
 截图中：
 
@@ -338,6 +338,8 @@ Pass示例
 Fail示例
 
 图1.2-26
+
+![](./Picture/35.jpeg)
 
  
 
@@ -363,10 +365,10 @@ Level Step：每完成一次Search后，若PER仍＜30.8%，Start Level变化的
 
 截图测试结果说明：
 
-表明该模组在TX Level为 -95 dBm，最小TX Level为-95.1dBm时,，PER开始 ≥30.8%
+表明该模组在Start Level为 -97 dBm，Search Result为-97.5dBm时,，PER开始 ≥30.8%
 
-（即芯片模组的RX灵敏度约为-95.1dBm）
+（即芯片模组的RX灵敏度约为-97.5dBm）
 
 图1.2-27
 
- ![](./Picture/36.png)
+ ![](./Picture/36.jpeg)
