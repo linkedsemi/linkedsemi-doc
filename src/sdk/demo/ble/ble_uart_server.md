@@ -152,7 +152,10 @@ BLE_UART_SERVER（以下简称uart_server）是具备蓝牙串口透传功能且
 在广播对象创建完成后，调用start_adv()开启广播。在这一步需要特别注意，组建advertising_data和scan_response_data内容需要通过使用宏ADV_DATA_PACK，返回值为最终的长度，作为参数之一传入dev_manager_start_adv()。如果没有advertising_data或scan_response_data，对应的length需要填0。**不可以填如与实际内容不匹配的length，例如sizeof(advertising_data)，否则协议栈的解析有可能出错！**
 
 关于宏ADV_DATA_PACK的解释如下：
-`#define ADV_DATA_PACK(buf,field_nums,...) (adv_data_pack((buf),(field_nums),__VA_ARGS__) - (buf))`
+
+```
+#define ADV_DATA_PACK(buf,field_nums,...) (adv_data_pack((buf),(field_nums),__VA_ARGS__) - (buf))
+```
 
 ADV_DATA_PACK是通过不定参函数adv_data_pack()来实现的。
 
@@ -205,8 +208,21 @@ MTU是BLE ATT的概念，它定义了在ATT层Client与Server之间任意数据�
 既然是透传，某些特殊场景下可能就需要考虑数据通信速率。uart server的实际通信速率会受若干因素影响，比如串口波特率、CPU处理速度、MTU长度、蓝牙射频性能、设备距离远近以及外部环境干扰等等，
 因此应用对通信速率如果有要求，需要事先评估。例如，115200的波特率，串口通信最大速率在100Kb/s左右，那么整个系统的透传速率就不可能超过这个理论值；MTU默认23字节时的通信速率，也肯定会低于更大MTU配置时的值，因此执行MTU Exchange也是提高通信速率的方式之一，等等。
 
-4、关于更新广播间隔
+4、关于OTA测试
 
-+++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++
 
-更新广播间隔并非uart_server必备的功能，只是放在这个demo里作为一个简单的示例。在软件定时器里，会去检查RTT input，如果检测到有字符输入，且是‘1’-‘9’之间，同时又有广播包在发送，则会调用ls_uart_server_update_adv_interval()更新广播包间隔。例如输入字符‘5’，则广播间隔会被更新为500ms。
+ble_uart_server支持简单的OTA功能测试（双区模式）。使能如下宏定义即可打开OTA测试功能：
+
+```
+#define UART_SERVER_WITH_OTA 1
+```
+
+在这种情况下，除了uart_server service，应用还会自动添加fota profile。一个最简单的OTA测试流程如下：
+
+1. 将默认的ble_uart_server_production.hex下载烧录到待测板，重启，手机APP确保能搜到设备名为"LS Uart Server ota prf"的广播包
+2. 修改UART_SVC_ADV_NAME，例如改成"LS Uart Server after ota"，重新编译ble_uart_server工程，将生成的ble_uart_server.ota.bin下载到手机里
+3. 使用BLE_FOTA手机APP，扫描连接待测设备，之后选择ble_uart_server.ota.bin，配置其他参数，开始ota
+4. ota完成后，BLE_FOTA会显示ota status:0，表示OTA完成。重新扫描设备，应当能搜到"LS Uart Server after ota"的广播包，表示OTA成功
+
+默认情况下，OTA功能在ble_uart_server里是关闭的。
