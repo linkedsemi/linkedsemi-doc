@@ -39,7 +39,7 @@ BLE_UART_SERVER（以下简称uart_server）是具备蓝牙串口透传功能且
     end
 ```
 
-1.1 准备工作之一：串口相关初始化
+### 1.1 准备工作之一：串口相关初始化
 
 ++++++++++++++++++++++++++++++++
 串口透传，首先需要初始化串口相关的功能模块，主要包括使能串口硬件模块，以及创建一个用于数据查询和处理的软件定时器。调用的相关接口如下：
@@ -50,7 +50,7 @@ BLE_UART_SERVER（以下简称uart_server）是具备蓝牙串口透传功能且
 
 串口参数默认配置IO为PB00/PB01，波特率为115200，具体可以参考ls_uart_init()的实现。软件定时器周期配置为50ms。
 
-1.2 准备工作之二：服务添加及注册
+### 1.2 准备工作之二：服务添加及注册
 
 ++++++++++++++++++++++++++++++++
 串口透传需要添加uart_server服务，这里主要包括服务定义和服务内部的特征值/描述符定义。
@@ -117,61 +117,11 @@ BLE_UART_SERVER（以下简称uart_server）是具备蓝牙串口透传功能且
 
     gatt_manager_svc_register(evt->service_added.start_hdl, UART_SVC_ATT_NUM, &ls_uart_server_svc_env);
 
-1.3 发广播包/建立连接
+### 1.3 发广播包/建立连接
 
-+++++++++++++++++++++
-在uart_server服务注册完成后，所有准备工作已经完成，此时可以调用create_adv_obj()创建广播对象。函数具体实现为：
++++++++++++++++++++++++
 
-    static void create_adv_obj()
-    {
-        struct legacy_adv_obj_param adv_param = {
-            .adv_intv_min = 0x20,
-            .adv_intv_max = 0x20,
-            .own_addr_type = PUBLIC_OR_RANDOM_STATIC_ADDR,
-            .filter_policy = 0,
-            .ch_map = 0x7,
-            .disc_mode = ADV_MODE_GEN_DISC,
-            .prop = {
-                .connectable = 1,
-                .scannable = 1,
-                .directed = 0,
-                .high_duty_cycle = 0,
-            },
-        };
-        dev_manager_create_legacy_adv_object(&adv_param);
-    }
-
-- adv_intv_min/adv_intv_max分别表示广播包的最小和最大周期，单位为625us，一般配置成同一个值
-
-
-- ch_map表示每组广播包的个数，默认为7（二进制111，每一个bit代表一个channel），表示在37/38/39这3个channel上都会发送
-
-
-- uart_server示例里，connectable必须为1，否则为不可连接广播包，后续无法与主机建立连接
-
-在广播对象创建完成后，调用start_adv()开启广播。在这一步需要特别注意，组建advertising_data和scan_response_data内容需要通过使用宏ADV_DATA_PACK，返回值为最终的长度，作为参数之一传入dev_manager_start_adv()。如果没有advertising_data或scan_response_data，对应的length需要填0。**不可以填如与实际内容不匹配的length，例如sizeof(advertising_data)，否则协议栈的解析有可能出错！**
-
-关于宏ADV_DATA_PACK的解释如下：
-
-```
-#define ADV_DATA_PACK(buf,field_nums,...) (adv_data_pack((buf),(field_nums),__VA_ARGS__) - (buf))
-```
-
-ADV_DATA_PACK是通过不定参函数adv_data_pack()来实现的。
-
-- buf表示存储advertising_data/scan_response_data的buffer
-- field_nums表示要填入advertising_data/scan_response_data里item的个数。例如，如果只是填入shortened_name这一个item，则field_nums设置为1，如果除此之外还要塞入mac地址，field_nums则需要设置为2，以此类推
-- field_nums后面的不定参数，包括每一个item的type/buffer/length，也就是说每一个item，后面需要3个参数与之对应
-
-举例如下：
-
-    uint8_t adv_data_length = ADV_DATA_PACK(advertising_data, 2, GAP_ADV_TYPE_MANU_SPECIFIC_DATA, manufacturer_data, sizeof(manufacturer_data),GAP_ADV_TYPE_COMPLETE_LIST_128_BIT_UUID, ble_svc_uuid_128, sizeof(ble_svc_uuid_128));
-    
-    uint8_t scan_rsp_data_len = ADV_DATA_PACK(scan_response_data, 1, GAP_ADV_TYPE_COMPLETE_LIST_16_BIT_UUID, &ble_svc_uuid_16, sizeof(ble_svc_uuid_16));
-    
-    dev_manager_start_adv(adv_obj_hdl, advertising_data, adv_data_length, scan_response_data, scan_rsp_data_len);
-
-上面的代码里，adv_payload里填入了2个item，分别是manufacturer_specific_data和128bit_UUID，scan_rsp里添加入了1个item，是16bit_UUID
+在uart_server服务注册完成后，所有准备工作已经完成，此时可以调用create_adv_obj()创建广播对象。关于广播的创建和发送可以参考[BLE_ADVERTISER示例说明](./ble_advertiser.md) 
 
 广播包发出来之后，可以通过手机APP（例如nRF Connect）扫描该设备的广播包，并建立连接，成功后本地能在gap_manager_callback()里收到CONNECTED消息，手机端也会自动进行服务发现流程，通常如下：
 
