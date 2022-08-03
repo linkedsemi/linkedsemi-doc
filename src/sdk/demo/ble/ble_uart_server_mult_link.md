@@ -12,9 +12,9 @@ BLE_UART_SERVER_MULT_LINK（以下简称mult_link）是多从机角色的蓝牙�
 
 由于是多连接，因此与连接的一些数据结构会从单个变量变成数组，包括：
 
-- uart_server_tx_buf：表示Uart接收到的数据向主机发送时的缓存。由于蓝牙推送数据是有延迟的，因此可能存在某一路蓝牙连接的数据还没有推送完成，其他连接又收到Uart数据的可能，所以需要每一路都要开一个独立的buffer
+- uart_server_tx_buf：表示来自蓝牙主机的数据向Uart发送时的缓存。由于Uart推送数据是有延迟的，因此可能存在某一路蓝牙连接的数据还没有推送完成，其他连接又收到蓝牙数据的可能，所以需要每一路都要开一个独立的buffer
 
-- uart_server_ble_buf_array：表示BLE收到的数据向Uart发送时的缓存。与蓝牙推送数据类似，Uart发数也是有延迟的，所以考虑到多路并行，这个buffer也需要设置为每一路一个buffer
+- uart_server_ble_buf_array：表示Uart收到的数据向蓝牙发送时的缓存。与Uart推送数据类似，蓝牙发数也是有延迟的，所以考虑到多路并行，这个buffer也需要设置为每一路一个buffer
 - uart_server_recv_data_length_array：表示Uart收到数据的长度
 - uart_server_ntf_done_array：表示每一路数据发送的NTF_DONE标志位。多连接的场景下，有可能其中某些连接交互比较流畅，而另一些连接则可能出现堵塞
 - uart_server_mtu_array：表示每一路连接的MTU值。MTU是主从双方相互协商的结果，不同的主机可能有不同的MTU值
