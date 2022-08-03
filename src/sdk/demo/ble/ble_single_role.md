@@ -205,3 +205,9 @@ single_role的master和slave建立连接后，通过PC端串口助手连接两�
 +++++++++++++++++++++++++++++++
 
 在Uart Server demo里，串口上的数据是完全没有格式的，因此每次只需要接收1个byte，累积的数据在定时器里周期性发送出去。而在single role demo里，由于有可能有多连接（一主一从），因此需要通过connection id来区分。这就要求串口过来的数据必须指明接收的connection对端，进而要求串口传输的数据有一定的数据格式。在single role demo里，串口数据格式是sync_byte(1byte, 默认0xA5)+length(2bytes)+connection_id(1byte)+data(length bytes)
+
+2、关于服务里的handle
+
+++++++++++++++++++++++++++++++
+
+在服务发现过程中，会涉及到特征值的attribute_handle和pointer_handle，其中attribute handle表示characteristic declaration的handle，而pointer handle则表示characteristic value declaration的handle。通常来讲，对特征值的操作会和pointer_handle相关。
