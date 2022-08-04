@@ -2,4 +2,5 @@
 
 ```{toctree}
 ls_24g/ls_24g_with_sw_timer_lp0
+ls_24g/ls_24g_with_freertos
 ```
