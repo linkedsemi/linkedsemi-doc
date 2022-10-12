@@ -13,8 +13,10 @@
 ​	任选一个链接将SDK下载下来，推荐使用gitee，下载速度更快
 
 - gitee链接：<https://gitee.com/linkedsemi/LS_SDK>
-    - [v1.0.0 Release](https://gitee.com/linkedsemi/LS_SDK/releases/v1.0.0)
+    - [v1.1.0 Release](https://gitee.com/linkedsemi/LS_SDK/releases/tag/v1.1.0)
+    - [v1.0.0 Release](https://gitee.com/linkedsemi/LS_SDK/releases/tag/v1.0.0)
 - github链接：<https://github.com/linkedsemi/LS_SDK>
+    - [v1.1.0 Release](https://github.com/linkedsemi/LS_SDK/releases/tag/v1.1.0)
     - [v1.0.0 Release](https://github.com/linkedsemi/LS_SDK/releases/tag/v1.0.0)
 
 ### Development Environment
