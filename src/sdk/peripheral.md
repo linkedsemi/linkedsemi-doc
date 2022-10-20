@@ -10,4 +10,5 @@ peripheral/rtc
 peripheral/spi
 peripheral/timer
 peripheral/uart
+peripheral/sha
 ```
