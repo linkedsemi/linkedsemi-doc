@@ -5,8 +5,15 @@
 ## 一、程序基本配置及说明：
 
 ```c
-/*TOUCHKEY模块初始化*/
-HAL_TOUCHKEY_Init();
+    /*TOUCHKEY模块初始化*/
+    HAL_TOUCHKEY_Init();
+    /*-----CMOD Init---*/
+    pinmux_touchkey_cmod_init();
+    /*--OPEN CH4,CH5,CH6,CH7--*/
+    pinmux_touchkey_ch4_init();
+    pinmux_touchkey_ch5_init();
+    pinmux_touchkey_ch6_init();
+    pinmux_touchkey_ch7_init();
 ```
 
 ## 二、操作步骤及结果：
