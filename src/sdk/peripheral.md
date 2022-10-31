@@ -10,6 +10,7 @@ peripheral/rtc
 peripheral/sm4
 peripheral/spi
 peripheral/timer
+peripheral/touchkey
 peripheral/uart
 peripheral/sha
 ```
