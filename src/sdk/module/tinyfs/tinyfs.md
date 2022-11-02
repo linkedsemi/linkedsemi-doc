@@ -148,7 +148,7 @@ uint8_t tinyfs_write(tinyfs_dir_t dir, uint16_t record_name, uint8_t *data, uint
 
 1. 写入数据的目录如果不存在，函数会返回：TINYFS_PARENT_DIR_NOT_FOUND；
 2. 注意在tinyfs 擦除，写入的时候，注意要调用 tinyfs_write_through 才会立即写入，否则要等缓存 buf 满才会写入 flash; 
-
+3. 对于不需要更新、长度较大的数据，不建议写入tinyfs，可以直接用flash接口存储到固定地址;
 
 
 ### 2.4 读出数据(Read Record)
