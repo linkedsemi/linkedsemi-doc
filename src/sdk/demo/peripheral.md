@@ -7,6 +7,7 @@ peripheral/sha/sha_polling
 peripheral/sha/sha_it
 peripheral/sm4/sm4_polling
 peripheral/sm4/sm4_it
+peripheral/timer
 peripheral/touchkey/touchkey_polling
 peripheral/touchkey/touchkey_it
 ```
