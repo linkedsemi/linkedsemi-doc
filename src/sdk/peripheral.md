@@ -13,4 +13,6 @@ peripheral/timer
 peripheral/touchkey
 peripheral/uart
 peripheral/sha
+peripheral/ssi
+
 ```
