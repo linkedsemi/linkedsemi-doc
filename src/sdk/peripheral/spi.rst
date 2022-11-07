@@ -73,7 +73,7 @@ SPI主要特性
 
     } SPI_HandleTypeDef;
 
-SPI模块具体参数设置可参阅该模块lsspi.h文件。
+SPI模块具体参数设置可参阅该模块ls_hal_spi.h文件。
 
 1.3 初始化SPI模块
 ..................
