@@ -15,4 +15,9 @@ peripheral/spi/spi_it
 peripheral/spi/spi_polling
 peripheral/ssi/ssi_it
 peripheral/ssi/ssi_dma
+peripheral/adcv2/adc_blocking_sampling
+peripheral/adcv2/adc_multi_channel
+peripheral/adcv2/adc_multi_channel_dma
+peripheral/adcv2/adc_single_channel
+peripheral/adcv2/adc_analog_wdg
 ```
