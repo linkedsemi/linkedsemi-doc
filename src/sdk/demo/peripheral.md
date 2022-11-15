@@ -2,6 +2,7 @@
 
 ```{toctree}
 peripheral/rtc
+peripheral/rtcv2
 peripheral/aes_padding
 peripheral/sha/sha_polling
 peripheral/sha/sha_it
