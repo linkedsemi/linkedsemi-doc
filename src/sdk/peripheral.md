@@ -7,6 +7,7 @@ peripheral/gpio
 peripheral/i2c
 peripheral/pdm
 peripheral/rtc
+peripheral/rtcv2
 peripheral/sm4
 peripheral/spi
 peripheral/timer
