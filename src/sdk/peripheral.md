@@ -15,5 +15,5 @@ peripheral/touchkey
 peripheral/uart
 peripheral/sha
 peripheral/ssi
-
+peripheral/wdg
 ```
