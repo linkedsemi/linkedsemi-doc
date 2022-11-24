@@ -2,6 +2,7 @@
 
 ```{toctree}
 peripheral/adc
+peripheral/dac
 peripheral/comp
 peripheral/crypt
 peripheral/gpio

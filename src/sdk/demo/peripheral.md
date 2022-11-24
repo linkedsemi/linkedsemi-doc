@@ -23,5 +23,11 @@ peripheral/adcv2/adc_multi_channel
 peripheral/adcv2/adc_multi_channel_dma
 peripheral/adcv2/adc_single_channel
 peripheral/adcv2/adc_analog_wdg
+peripheral/dac/dual_dac_channel_dma_voltage
+peripheral/dac/dual_dac_channel_voltage
+peripheral/dac/dual_dac_channel_wave
+peripheral/dac/single_dac_channel_dma_voltage
+peripheral/dac/single_dac_channel_voltage
+peripheral/dac/single_dac_channel_wave
 peripheral/wdg
 ```
