@@ -17,6 +17,9 @@ peripheral/spi/spi_it
 peripheral/spi/spi_polling
 peripheral/ssi/ssi_it
 peripheral/ssi/ssi_dma
+peripheral/i2c/i2c_it
+peripheral/i2c/i2c_polling
+peripheral/i2c/i2c_dma
 peripheral/adcv2/adc_amic_sampling
 peripheral/adcv2/adc_blocking_sampling
 peripheral/adcv2/adc_multi_channel
