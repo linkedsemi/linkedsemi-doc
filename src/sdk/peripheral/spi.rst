@@ -40,10 +40,6 @@ SPI主要特性
     void spi2_mosi_io_init(uint8_t mosi);
     void spi2_miso_io_init(uint8_t miso);
 
-.. note ::
-
-    SNN是SPI片选脚，当SPI为主机时，也可以用普通IO替代，如果工程师需要用IO功能替代时，可以不初始化该复用IO。
-
 1.2 设置SPI模块参数
 .....................
 
@@ -51,26 +47,28 @@ SPI主要特性
 
 .. code ::
 
+    struct Interrupt_Env
+    {
+        uint8_t                  *pBuffPtr;                       /*!< Pointer to SPI transfer Buffer */
+        uint16_t              	 Count;                           /*!< SPI Transfer Counter           */
+        void (*transfer_Fun)(struct __SPI_HandleTypeDef *hspi);   /*!< function pointer on Rx_Fun     */
+    };
+
+    struct SPI_DMA_Env
+    {
+        uint8_t                 DMA_Channel;               
+        uint8_t                 dummy;
+    };
+
     typedef struct __SPI_HandleTypeDef
     {
-        reg_spi_t                   *Instance;                 /*!< SPI registers base address               */
-        SPI_InitTypeDef             Init;                      /*!< SPI communication parameters             */
-        uint8_t                     *pTxBuffPtr;               /*!< Pointer to SPI Tx transfer Buffer        */
-        uint16_t                    TxXferSize;                /*!< SPI Tx Transfer size                     */
-        uint16_t              	    TxXferCount;               /*!< SPI Tx Transfer Counter                  */
-        uint8_t                     *pRxBuffPtr;               /*!< Pointer to SPI Rx transfer Buffer        */
-        uint16_t                    RxXferSize;                /*!< SPI Rx Transfer size                     */
-        uint16_t              	    RxXferCount;               /*!< SPI Rx Transfer Counter                  */
-        void (*RxISR)(struct __SPI_HandleTypeDef *hspi);       /*!< function pointer on Rx ISR               */
-        void (*TxISR)(struct __SPI_HandleTypeDef *hspi);       /*!< function pointer on Tx ISR               */
-        void                       *DMAC_Instance;
+        reg_spi_t                  *Instance;      /*!< SPI registers base address     */
+        SPI_InitTypeDef            Init;           /*!< SPI communication parameters   */
+        void                       *DMAC_Instance; 
         union{
-                struct SPI_DMA_Env DMA;
+                struct Interrupt_Env Interrupt;
+                struct SPI_DMA_Env      DMA;
         }Tx_Env,Rx_Env;
-        HAL_LockTypeDef             Lock;                      /*!< Locking object                           */
-        HAL_SPI_StateTypeDef  	    State;                     /*!< SPI communication state                  */
-        uint32_t              	    ErrorCode;                 /*!< SPI Error code                           */
-
     } SPI_HandleTypeDef;
 
 SPI模块具体参数设置可参阅该模块ls_hal_spi.h文件。
@@ -130,8 +128,8 @@ SPI模块具体参数设置可参阅该模块ls_hal_spi.h文件。
 
 .. code ::
 
-    HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-    HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+    HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint16_t Size, uint32_t Timeout);
+    HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pRxData, uint16_t Size, uint32_t Timeout);
     HAL_StatusTypeDef HAL_SPI_TransmitReceive(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size, uint32_t Timeout);
 
 顾名思义，阻塞方式是指应用软件调用该接口后，CPU需要等待本次通信完成后才退出，会一定程度上降低CPU的利用率。
@@ -143,8 +141,8 @@ SPI模块具体参数设置可参阅该模块ls_hal_spi.h文件。
 
 .. code ::
 
-    HAL_StatusTypeDef HAL_SPI_Transmit_IT(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size);
-    HAL_StatusTypeDef HAL_SPI_Receive_IT(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size);
+    HAL_StatusTypeDef HAL_SPI_Transmit_IT(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint16_t Size);
+    HAL_StatusTypeDef HAL_SPI_Receive_IT(SPI_HandleTypeDef *hspi, uint8_t *pRxData, uint16_t Size);
     HAL_StatusTypeDef HAL_SPI_TransmitReceive_IT(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size);
 
 

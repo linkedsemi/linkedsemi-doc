@@ -1,6 +1,7 @@
 # SPI_POLLING 使用示例
 
-例程路径: ls_sdk\examples\peripheral\spi\spi_polling
+例程路径: ls_sdk\examples\peripheral\spi\spi_polling_master
+          ls_sdk\examples\peripheral\spi\spi_polling_slave
 
 ## 一、程序基本配置及说明：
 
@@ -9,31 +10,31 @@ spi_polling示例程序演示了使用polling的方式实现spi master和spi sla
 程序开始时先进行系统初始化和spi初始化：
 
 ```c
-	/* system init app     */
-       sys_init_none();
-  	/* init spi and GPIO   */
-       spi_init();
+    /* system init app     */
+    sys_init_none();
+    /* init spi and GPIO   */
+    spi_init();
 ```
 
 spi IO端口设置：
 
+        /* Configure the GPIO AF */
+        /* CLK-------------PB12 */	
+        /* CS--------------PB13 */	
+        /* MOSI------------PB14 */	
+        /* MISO------------PB15 */	
 ```C
-      /* Configure the GPIO AF */
-      /* CLK-------------PB12 */	
-      /* SSN-------------PB13 */	
-      /* MOSI------------PB14 */	
-      /* MISO------------PB15 */	
-  #ifdef 	MASTER_BOARD
-    pinmux_spi2_master_clk_init(PB12);
-    pinmux_spi2_master_nss_init(PB13);
-    pinmux_spi2_master_mosi_init(PB14);
-    pinmux_spi2_master_miso_init(PB15);
-  #else
-    pinmux_spi2_slave_clk_init(PB12);
-    pinmux_spi2_slave_nss_init(PB13);
-    pinmux_spi2_slave_mosi_init(PB14);
-    pinmux_spi2_slave_miso_init(PB15);
-  #endif
+    /* master device */
+    pinmux_spi2_master_clk_init(SPI_CLK_PIN);
+    pinmux_spi2_master_mosi_init(SPI_MOSI_PIN); 
+    pinmux_spi2_master_miso_init(SPI_MISO_PIN);
+    spi2_master_cs_init(SPI_CS_PIN);
+ 
+    /* slave device */
+    pinmux_spi2_slave_clk_init(SPI_CLK_PIN);
+    pinmux_spi2_slave_nss_init(SPI_CS_PIN);
+    pinmux_spi2_slave_mosi_init(SPI_MOSI_PIN);
+    pinmux_spi2_slave_miso_init(SPI_MISO_PIN);
 ```
 
 ## 二、操作步骤及结果：
@@ -45,34 +46,28 @@ spi IO端口设置：
 SPI初始化结构体配置说明：
 
 ```C
-/* Set the SPI parameters */
-  SpiHandle.Instance               = SPI2;   						          /*选择SPI Instance */
-  SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;		/*设置时钟分频因子，fpclk/分频数=fSCK */
-  SpiHandle.Init.Direction         = SPI_DIRECTION_2LINES;        /*设置SPI的单双向模式 */
-  SpiHandle.Init.CLKPhase          = SPI_PHASE_1EDGE;				      /*设置时钟相位，可选奇/偶数边沿采样 */
-  SpiHandle.Init.CLKPolarity       = SPI_POLARITY_LOW;				    /*设置时钟极性CPOL，可选高/低电平*/
-  SpiHandle.Init.DataSize          = SPI_DATASIZE_8BIT;				    /*设置SPI的数据帧长度，可选8/16位 */
-  SpiHandle.Init.FirstBit          = SPI_FIRSTBIT_MSB;				    /*设置MSB/LSB先行 */
-  SpiHandle.Init.TIMode            = SPI_TIMODE_DISABLE;			    /*指定是否启用TI模式 */
-  SpiHandle.Init.NSS               = SPI_NSS_HARD_OUTPUT;			    /*设置NSS引脚由SPI硬件控制还是软件控制*/
-#ifdef MASTER_BOARD
-  SpiHandle.Init.Mode 						= SPI_MODE_MASTER;		          /*设置SPI的主/从机模式 */
-#else
-  SpiHandle.Init.Mode						= SPI_MODE_SLAVE;
-#endif /* MASTER_BOARD */
+    /* Set the SPI parameters */
+    SpiHandle.Instance               = SPI2;   						        /*选择SPI Instance */
+    SpiHandle.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;		    /*设置时钟分频因子，fpclk/分频数=fSCK */
+    SpiHandle.Init.CLKPhase          = SPI_PHASE_1EDGE;				        /*设置时钟相位，可选奇/偶数边沿采样 */
+    SpiHandle.Init.CLKPolarity       = SPI_POLARITY_LOW;				    /*设置时钟极性CPOL，可选高/低电平*/
+    SpiHandle.Init.DataSize          = SPI_DATASIZE_8BIT;				    /*设置SPI的数据帧长度，可选8/16位 */
+    SpiHandle.Init.FirstBit          = SPI_FIRSTBIT_MSB;				    /*设置MSB/LSB先行 */
+    SpiHandle.Init.TIMode            = SPI_TIMODE_DISABLE;			        /*指定是否启用TI模式 */
+    SpiHandle.Init.Mode 			 = SPI_MODE_MASTER;		                /*设置SPI的主/从机模式,可选主机/从机 */
 ```
 
 SPI polling模式数据传输提供了3个API：
 
-HAL_SPI_Transmit ：只能发送数据
+HAL_SPI_Transmit ：发送数据有效
 
-HAL_SPI_Receive ：  只能接收数据
+HAL_SPI_Receive ：  接收数据有效
 
-HAL_SPI_TransmitReceive ：可以同时发送和接收数据 （全双工）
+HAL_SPI_TransmitReceive ：发送和接收数据同时有效
 
 ```c
-HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout)
-HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint16_t Size, uint32_t Timeout)
+HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pRxData, uint16_t Size, uint32_t Timeout)
 HAL_SPI_TransmitReceive(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size,
                                           uint32_t Timeout)
 
@@ -104,21 +99,12 @@ HAL_StatusTypeDef HAL_SPI_TransmitReceive(SPI_HandleTypeDef *hspi, uint8_t *pTxD
 | SPI MASTER BOARD | SPI SLAVE BOARD |
 | :--------------: | :-------------: |
 |  spi_master_clk  |  spi_slave_clk  |
-|  spi_master_nss  |  spi_slave_nss  |
+|  spi_master_cs   |  spi_slave_cs   |
 | spi_master_mosi  | spi_slave_mosi  |
 | spi_master_miso  | spi_slave_miso  |
 |       GND        |       GND       |
 
 #### 2.1.2  运行程序
-
-例程使用同一套代码实现spi主从机程序，通过宏定义"#define MASTER_BOARD" 选择主从机：
-
-```c
-/* Uncomment this line to use the board as master, if not it is used as slave */
-#define MASTER_BOARD
-```
-
- 如果是主机则保留上面宏定义"#define MASTER_BOARD"，从机则需要注释掉上面的宏定义"#define MASTER_BOARD"
 
 主从机程序分别编译后下载到对应的开发板中，需要先在从机上进行复位，然后在主机上进行复位后观察开发板上LED的状态
 
