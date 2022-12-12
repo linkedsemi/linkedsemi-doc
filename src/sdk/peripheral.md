@@ -18,4 +18,5 @@ peripheral/uart
 peripheral/sha
 peripheral/ssi
 peripheral/wdg
+peripheral/can
 ```
