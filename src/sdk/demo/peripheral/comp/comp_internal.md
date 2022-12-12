@@ -1,6 +1,6 @@
-# COMP 使用示例
+# COMP_INTERNAL 使用示例
 
-例程路径： ls_sdk/examples/peripheral/comp
+例程路径： ls_sdk/examples/peripheral/comp/comp_internal
 
 ## 一、程序基本配置及说明：
 ```c
@@ -13,25 +13,25 @@ static void comp_init()
 }
 ```
 - COMP1的输出IO初始化
-- 配置COMP_Config中实例化对象为COMP1
+- 配置COMP_Config中实例化对象为LSCOMP1
 - 调用HAL_COMP_Init()进行COMP模块初始化
 
 ## 二、操作步骤
 ### 2.1 参数设置
-本例程中设置的参考电压源为内部基准电压0.9V，选择高速时钟，迟滞电压选择21.9mV，同时给上升沿及下降沿中断使能。
+本例程中设置的参考电压源为内部基准电压0.9V，采用高速时钟，迟滞电压选择21.9mV，同时给上升沿及下降沿中断使能。
 ```c
 static void test_comp1()
 {
     COMP_Param param;
-    param.risingintr_en = 1;    // interrupt enable for the rising edge interrupt
-    param.fallingintr_en = 1;   // interrupt enable for the falling edge interrupt
-    param.flt_byp = 0;          // filter bypass
-    param.flt_prd = 1;          // the filter period in MSI clock
-    param.input = 0;            // input :IOVIP[0]
-    param.vrefsel = 4;          // reference source select: internal reference defined by VREFCTL
-    param.vrefctl = 2;          // internal reference voltage select: 0.6V
-    param.hysteresis = 3;       // hysteresis select: HS:15.6mV
-    param.clk_mode = HighSpeed; // speed mode select ( LS/MS/HS )
+    param.risingintr_en         = ENABLE;
+    param.fallingintr_en        = ENABLE;
+    param.flt_byp               = COMP_FLT_ENABLE;
+    param.flt_prd               = ENABLE;
+    param.input                 = INPUT_COMP1_PC00;
+    param.vrefsel               = VREFSEL_INTERNAL_REFERENCE_VOLTAGE;
+    param.vrefctl               = VREFCTL_900MV;
+    param.hysteresis            = HYS_HS_21P9MV;
+    param.clk_mode              = HighSpeed;
     HAL_COMP_Config(&COMP_Config, &param);
 }
 ```
@@ -40,13 +40,12 @@ static void test_comp1()
 HAL_COMP_Start(&COMP_Config);
 ```
 ```c
-void HAL_COMP_Callback(COMP_HandleTypeDef *hcomp, enum comp_intr_edge edge, bool status)
+void HAL_COMP_Callback(COMP_HandleTypeDef *hcomp, enum comp_intr_edge edge, bool output)
 {
-    uint8_t comp = 0;
+    uint8_t comp = 1;
     switch ((uint32_t)hcomp->COMP)
     {
     case (uint32_t)LSCOMP1:
-        comp = 1;
         break;
     case (uint32_t)LSCOMP2:
         comp = 2;
@@ -57,18 +56,19 @@ void HAL_COMP_Callback(COMP_HandleTypeDef *hcomp, enum comp_intr_edge edge, bool
     }
     switch (edge)
     {
-    case EDGE_RISING:
-        LOG_I("trigger : COMP%d--Rising   edge--%d", comp, status);
+    case COMP_EDGE_RISING:
+        LOG_I("trigger : COMP%d--Rising   edge--Current level: %d", comp, output);
         break;
-    case EDGE_FALLING:
-        LOG_I("trigger : COMP%d--Falling  edge--%d", comp, status);
+    case COMP_EDGE_FALLING:
+        LOG_I("trigger : COMP%d--Falling  edge--Current level: %d", comp, output);
         break;
-    case EDGE_BOTH:
-        LOG_I("trigger : COMP%d--Both     edge--%d", comp, status);
+    case COMP_EDGE_BOTH:
+        LOG_I("trigger : COMP%d--Both     edge--Current level: %d", comp, output);
         break;
     }
 }
 ```
+- HAL_COMP_Callback返回COMP实例、中断触发沿以及中断触发后的输出信号，进行判断然后输出Log
 ### 2.3 控制输入电压
 COMP1的0号通道对应的pin为PC00，通过电源直接给PC00输入电压，根据情况对输入电压进行调节。
 
