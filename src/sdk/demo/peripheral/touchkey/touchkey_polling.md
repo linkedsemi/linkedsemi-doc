@@ -74,7 +74,7 @@ static void SelfCalibration(uint8_t count, uint32_t sum[16])
         HAL_TOUCHKEY_StartScan(data);
         for (uint8_t i = 0; i < 16; i++)
         {
-            if ((tkParam.scan_channel_en & CO_BIT(i) && data[i] < chn_avg[i] * 0.6 && data[i] > chn_avg[i] * 0.1))
+            if ((tkParam.scan_channel_en & CO_BIT(i) && data[i] < chn_avg[i] / 10 * 6 && data[i] > chn_avg[i] / 10))
             {
                 LOG_I("trigger CHANNEL:---%d---%d", i, data[i]);
             }
