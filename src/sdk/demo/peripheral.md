@@ -38,4 +38,7 @@ peripheral/dac/single_dac_channel_voltage
 peripheral/dac/single_dac_channel_wave
 peripheral/wdg
 peripheral/can
+peripheral/i2s/i2s_dma
+peripheral/i2s/i2s_it
+peripheral/i2s/i2s_polling
 ```

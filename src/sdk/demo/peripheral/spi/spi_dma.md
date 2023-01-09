@@ -1,7 +1,7 @@
 # SPI_DMA 使用示例
 
-例程路径: ls_sdk\examples\peripheral\spi\spi_dma_master
-          ls_sdk\examples\peripheral\spi\spi_dma_slave
+例程路径: ls_sdk\examples\peripheral\spi_i2s\spi_dma_master
+          ls_sdk\examples\peripheral\spi_i2s\spi_dma_slave
 
 ## 一、程序基本配置及说明：
 
