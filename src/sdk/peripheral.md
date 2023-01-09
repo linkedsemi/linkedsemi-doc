@@ -14,6 +14,7 @@ peripheral/sm4
 peripheral/spi
 peripheral/timer
 peripheral/touchkey
+peripheral/trng
 peripheral/uart
 peripheral/sha
 peripheral/ssi
