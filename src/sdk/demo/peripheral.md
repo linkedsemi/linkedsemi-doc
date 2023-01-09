@@ -13,6 +13,8 @@ peripheral/sm4/sm4_it
 peripheral/timer
 peripheral/touchkey/touchkey_polling
 peripheral/touchkey/touchkey_it
+peripheral/trng/trng_polling
+peripheral/trng/trng_it
 peripheral/spi/spi_dma
 peripheral/spi/spi_it
 peripheral/spi/spi_polling
