@@ -159,11 +159,14 @@ Audio采样频率可能是 192 kHz, 96 kHz, 48 kHz, 44.1 kHz, 32 kHz,
 
 输出主时钟（SPI_I2SPR 寄存器中的 MCKOE 置 1)时：
 
-FS = I2SxCLK / [(16*2)*((2*I2SDIV)+ODD)*8)]（通道帧宽度为 16 位时）
-FS = I2SxCLK / [(32*2)*((2*I2SDIV)+ODD)*4)]（通道帧宽度为 32 位时）
+FS = I2SxCLK / [(16\*2)\*((2\*I2SDIV)+ODD)\*8)]（通道帧宽度为 16 位时）
+
+FS = I2SxCLK / [(32\*2)\*((2\*I2SDIV)+ODD)\*4)]（通道帧宽度为 32 位时）
 
 关闭主时钟输出（MCKOE 位清零）时：
-FS = I2SxCLK / [(16*2)*((2*I2SDIV)+ODD))]（通道帧宽度为 16 位时）
-FS = I2SxCLK / [(32*2)*((2*I2SDIV)+ODD))]（通道帧宽度为 32 位时）
+
+FS = I2SxCLK / [(16\*2)\*((2\*I2SDIV)+ODD))]（通道帧宽度为 16 位时）
+
+FS = I2SxCLK / [(32\*2)\*((2\*I2SDIV)+ODD))]（通道帧宽度为 32 位时）
 
 其他具体说明可参考User Manual I2S部分
