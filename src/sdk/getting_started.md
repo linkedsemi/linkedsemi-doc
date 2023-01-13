@@ -24,6 +24,7 @@
 - Supported Compiler Toolchains
     - GCC + VSCode + Python
     - Keil(MDK)
+    - IAR
 
 - Supported Debugger Host
     - J-Link Software
@@ -41,6 +42,8 @@ Debugger host is used for communication with the debug probe.
 #### VSCode
 [VSCode Environment Setup](./getting_started/vscode)
 
+#### IAR
+[IAR Environment Setup](./getting_started/iar)
 
 ## Build/Program/Debug
 
@@ -49,10 +52,13 @@ Debugger host is used for communication with the debug probe.
 ### VSCode
 [Develop by VSCode](./getting_started/vscode)
 
+### IAR
+[Develop by IAR](./getting_started/iar)
 
 ```{toctree}
 :hidden:
 getting_started/keil
 getting_started/vscode
 getting_started/jlink
+getting_started/iar
 ```
