@@ -41,4 +41,6 @@ peripheral/can
 peripheral/i2s/i2s_dma
 peripheral/i2s/i2s_it
 peripheral/i2s/i2s_polling
+peripheral/usb/usbd_cdc_msc
+peripheral/usb/usbd_hid_composite
 ```
