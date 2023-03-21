@@ -310,7 +310,73 @@ HAL_TIMEx_PWMN_Start(&TimHandle, TIM_CHANNEL_1);//互补通道输出
 
 保证开发板相关硬件连接正确，把编译好的程序下载到开发板，用杜邦线把PA00和PA07相连，通过log查看输出的捕获的PWM频率和占空比的值。
 
+## 五、Timer 编码器模式
 
+例程路径： ls_sdk/examples/peripheral/ timer/Encode_TIM
+
+### 5.1 功能描述
+
+Timer 的编码器接口模式是timer输入捕获的一种特殊情况。对于芯片来说最后结果是输出捕获脉冲的个数以及计数方向。根据捕获脉冲个数以及捕获的时间可以推算出电机转动的速度或者运动的相对位置，根据计数方向可以知道电机转动方向。
+
+对于芯片输入的信号是两个存在相位差的PWM波形。
+
+### 5.2 软件配置
+
+- 示例中使用PA00、PA01产生需要捕获的脉冲信号，PB11和PB10作为捕获接口。
+
+- 为了得到两个相位差大致为90°的脉冲信号，软件中将PA00配置为TIMB的PWM输出，timer计数方式配置为向上向下计数，在使能PWM输出的同时，也打开TIMB的计数溢出中断，然后在溢出中断里面去翻转PA01，这样我们需要的波形就配置完成了。
+
+- 编码器模式配置
+
+  ```c
+  static void TIM_Encoder_Init(void)
+  { 
+      // 将PB10、PB11映射到TIMA的ch1和ch2上
+      pinmux_gptima1_ch1_init(PB10,false,0);
+      pinmux_gptima1_ch2_init(PB11,false,0);
+      TIM_Encoder_InitTypeDef Encoder_ConfigStructure;
+  
+      // 定时器时基配置
+      TIM_EncoderHandle.Instance = LSGPTIMA;
+      TIM_EncoderHandle.Init.Prescaler = 0;
+      TIM_EncoderHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+      TIM_EncoderHandle.Init.Period = ENCODER_TIM_PERIOD - 1;
+      TIM_EncoderHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+      TIM_EncoderHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  
+      // 设置计数器采集编码器信号的方式，对应xx_SMCR寄存器的SMS[2:0]位
+      Encoder_ConfigStructure.EncoderMode = ENCODER_MODE;
+  	// 输入捕获信号极性选择，用于设置定时器通道在编码器模式下的输入信号是否
+  	// 反相。它设定 xx_CCER 寄存器的 CCxNP 位和 CCxP 位
+      Encoder_ConfigStructure.IC1Polarity = TIM_ICPOLARITY_RISING;
+      // 编码器接口模式下，此成员只能设置为 TIM_ICSELECTION_DIRECTTI
+      Encoder_ConfigStructure.IC1Selection = TIM_ICSELECTION_DIRECTTI;
+      // 输入捕获通道分频器
+      Encoder_ConfigStructure.IC1Prescaler = TIM_ICPSC_DIV1;
+      // 输入滤波配置
+      Encoder_ConfigStructure.IC1Filter = 0;
+  
+      // 通道2与通道1配置说明相同
+      Encoder_ConfigStructure.IC2Polarity = TIM_ICPOLARITY_RISING;
+      Encoder_ConfigStructure.IC2Selection = TIM_ICSELECTION_DIRECTTI;
+      Encoder_ConfigStructure.IC2Prescaler = TIM_ICPSC_DIV1;
+      Encoder_ConfigStructure.IC2Filter = 0;
+  	
+      // 初始化编码器接口
+      HAL_TIM_Encoder_Init(&TIM_EncoderHandle, &Encoder_ConfigStructure);
+      // 打开定时器溢出中断
+      HAL_TIM_Base_Start_IT(&TIM_EncoderHandle);
+      
+      // 使能编码器接口
+      HAL_TIM_Encoder_Start(&TIM_EncoderHandle, TIM_CHANNEL_ALL);
+  }
+  ```
+
+  
+
+### 5.2 下载验证
+
+- 保证开发板相关硬件连接正确，把编译好的程序下载到开发板，将PA00接到PB11，PA01接到PB10，通过log查看捕获到脉冲的个数，需要与代码中宏`CAPTRUE_COUNT`一致则行为符合。
 
 
 
