@@ -25,10 +25,10 @@ spi IO端口设置：
         /* MISO------------PB15 */
 ```C	
     /* master device */
-    pinmux_spi2_master_clk_init(SPI_CLK_PIN);
+    spi2_master_cs_init(SPI_CS_PIN);
+    pinmux_spi2_master_clk_init(SPI_CLK_PIN,SPI_POLARITY_LOW);  // The idle state of clock must correspond to the polarity
     pinmux_spi2_master_mosi_init(SPI_MOSI_PIN); 
     pinmux_spi2_master_miso_init(SPI_MISO_PIN);
-    spi2_master_cs_init(SPI_CS_PIN);
  
     /* slave device */
     pinmux_spi2_slave_clk_init(SPI_CLK_PIN);
@@ -109,6 +109,23 @@ void HAL_SPI_DMACpltCallback(SPI_HandleTypeDef *hspi)
     ComState = COM_COMPLETE;
 }
 ```
+**NOTE：** 
+
+1. LE501X的使用的数据buffer必须使用DMA_RAM_ATTR指定在DMA特定的RAM区域（参考spi dma例程）
+
+2. spi dma驱动程序使用收发一体的处理方式，因此在初始化DMA channel时必须配置发送和接收的channel
+
+    (即使只使用transmit或receive也需要配置两个channel):
+
+    ```c  
+    static void spi_dma_channel_init(void)
+    {
+        DMA_CONTROLLER_INIT(dmac1_inst);
+        SpiHandle.DMAC_Instance = &dmac1_inst;
+        SpiHandle.Tx_Env.DMA.DMA_Channel = 0;
+        SpiHandle.Rx_Env.DMA.DMA_Channel = 1;
+    }
+    ```
 
 #### 2.1.1 端口连接
 
