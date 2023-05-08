@@ -25,10 +25,11 @@ spi IO端口设置：
         /* MISO------------PB15 */	
 ```C
     /* master device */
+    spi2_master_cs_init(SPI_CS_PIN);
+    pinmux_spi2_master_clk_init(SPI_CLK_PIN,SPI_POLARITY_LOW);  // The idle state of clock must correspond to the polarity
     pinmux_spi2_master_clk_init(SPI_CLK_PIN);
     pinmux_spi2_master_mosi_init(SPI_MOSI_PIN); 
     pinmux_spi2_master_miso_init(SPI_MISO_PIN);
-    spi2_master_cs_init(SPI_CS_PIN);
  
     /* slave device */
     pinmux_spi2_slave_clk_init(SPI_CLK_PIN);
